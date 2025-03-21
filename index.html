@@ -7,9 +7,17 @@
   <button class="nav-button next" id="nextBtn">❯</button>
 </div>
 <script>
-  // Get the shadow root by referencing the current script’s root node.
-  const root = document.currentScript.getRootNode();
-  // Query the carousel container from within the shadow root.
+  // Attempt to get the shadow root via document.currentScript.
+  // If not available, fallback to finding the host element by tag name.
+  let root;
+  if (document.currentScript && document.currentScript.getRootNode) {
+      root = document.currentScript.getRootNode();
+  } else {
+      const host = document.querySelector('widget-webview');
+      root = host ? host.shadowRoot : document;
+  }
+  
+  // Query the carousel container from within the determined root.
   const container = root.querySelector('#carousel');
 
   // Define the slide width in vw.
