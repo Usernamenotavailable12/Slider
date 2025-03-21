@@ -29,7 +29,7 @@
 
     // Show a slide by setting the transform in vw.
     function showSlide(index) {
-      const slidesContainer = document.getElementById('slides');
+      const slidesContainer = container.querySelector('#slides');
       slidesContainer.style.transition = 'transform 0.5s ease';
       slidesContainer.style.transform = 'translateX(' + (-slideWidth * index) + 'vw)';
       currentSlide = index;
@@ -54,7 +54,7 @@
       isDragging = true;
       dragDelta = 0;  // reset movement
       startX = event.clientX;
-      const slidesContainer = document.getElementById('slides');
+      const slidesContainer = container.querySelector('#slides');
       slidesContainer.style.transition = 'none';
       slidesContainer.setPointerCapture(event.pointerId);
       clearInterval(autoSlideInterval);
@@ -66,13 +66,13 @@
       const deltaX = (currentX - startX) * pxToVw;
       dragDelta = deltaX;
       currentTranslate = prevTranslate + deltaX;
-      const slidesContainer = document.getElementById('slides');
+      const slidesContainer = container.querySelector('#slides');
       slidesContainer.style.transform = `translateX(${currentTranslate}vw)`;
     }
     function dragEnd(event) {
       if (!isDragging) return;
       isDragging = false;
-      const slidesContainer = document.getElementById('slides');
+      const slidesContainer = container.querySelector('#slides');
       slidesContainer.releasePointerCapture(event.pointerId);
       // Calculate final movement in vw units.
       const finalDelta = (event.clientX - startX) * pxToVw;
@@ -105,7 +105,7 @@
         const currentLocale = document.documentElement.lang || 'en';
         const slidesData = data[currentLocale] || data['en'];
         totalSlides = slidesData.length;
-        const slidesContainer = document.getElementById('slides');
+        const slidesContainer = container.querySelector('#slides');
 
         // Dynamically render each slide.
         slidesData.forEach(slide => {
