@@ -112,7 +112,13 @@
                   const slideDiv = document.createElement('div');
                   slideDiv.className = 'slide';
                   let innerContent = document.createElement('div');
-                  innerContent.setAttribute("onclick", "TMA.navigate('" + slide.navigateVar + "')");
+                  innerContent.addEventListener("click", () => {
+                    if (window.parent && window.parent.TMA && typeof window.parent.TMA.navigate === 'function') {
+                        window.parent.TMA.navigate(slide.navigateVar);
+                    } else {
+                        console.warn("TMA.navigate not available on parent.");
+                    }
+                });                
                   if (slide.optionalHref) {
                       const anchor = document.createElement('a');
                       anchor.href = slide.optionalHref;
