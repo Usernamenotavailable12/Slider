@@ -24,12 +24,14 @@
       let prevTranslate = 0;
       let dragDelta = 0;
 
-      if (typeof TMA === 'undefined') {
+      const isInIframe = window.self !== window.top;
+
+      if (!isInIframe && typeof TMA === 'undefined') {
           window.TMA = {
               navigate: function(variable) {
                   console.log("Navigating to: " + variable);
               }
-          };
+          };      
       }
 
       function showSlide(index) {
