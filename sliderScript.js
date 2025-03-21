@@ -100,7 +100,7 @@
           resetAutoSlide();
       }
 
-      fetch('https://usernamenotavailable12.github.io/Slider/slidesData.json')
+      fetch('./slidesData.json')
           .then(response => response.json())
           .then(data => {
               const currentLocale = document.documentElement.lang || 'en';
@@ -157,3 +157,18 @@
 
   init();
 })();
+
+function sendHeight() {
+  const height = document.documentElement.scrollHeight;
+  window.parent.postMessage({ height: height }, '*');
+}
+
+
+fetch('https://usernamenotavailable12.github.io/Slider/slidesData.json')
+  .then(response => response.json())
+  .then(data => {
+
+      resetAutoSlide();
+      sendHeight(); 
+      window.addEventListener('resize', sendHeight); 
+  });
