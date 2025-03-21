@@ -97,13 +97,16 @@
           resetAutoSlide();
       }
 
-      function sendDimensions() {
+      function updateHeight() {
           const height = document.documentElement.scrollHeight;
+          // Set CSS variable on the document element
+          document.documentElement.style.setProperty('--slider-height', `${height}px`);
+          // Send to parent as fallback
           window.parent.postMessage({ height: height }, '*');
-          console.log('Height sent:', height); // Debug log
+          console.log('Height updated:', height); // Debug
       }
 
-      fetch('./slidesData.json')
+      fetch('https://usernamenotavailable12.github.io/Slider/slidesData.json')
           .then(response => response.json())
           .then(data => {
               const currentLocale = document.documentElement.lang || 'en';
@@ -152,18 +155,21 @@
               });
 
               resetAutoSlide();
-              sendDimensions(); // Initial height
+              updateHeight(); // Initial height
           })
           .catch(error => {
               console.error('Error loading slides data:', error);
           });
 
-      // Debounced resize handler
+      // Continuous height updates
       let resizeTimeout;
       window.addEventListener('resize', () => {
           clearTimeout(resizeTimeout);
-          resizeTimeout = setTimeout(sendDimensions, 200); // Debounce by 200ms
+          resizeTimeout = setTimeout(updateHeight, 100); // Debounce 100ms
       });
+
+      // Poll for height changes (e.g., images loading)
+      setInterval(updateHeight, 500);
   }
 
   init();
