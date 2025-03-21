@@ -99,7 +99,7 @@
     }
 
     // Load slide data from an external JSON file.
-    fetch('slidesData.json')
+    fetch('https://usernamenotavailable12.github.io/Slider/slidesData.json')
       .then(response => response.json())
       .then(data => {
         const currentLocale = document.documentElement.lang || 'en';
