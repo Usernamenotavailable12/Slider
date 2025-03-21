@@ -1,8 +1,6 @@
 (function() {
-  // Use 'this' as the root when executed in Shadow DOM, fallback to document otherwise
   var root = this && this.querySelector ? this : document;
 
-  // Wait until the carousel container is available in the root
   function init() {
       var container = root.querySelector('#carousel');
       if (!container) {
@@ -99,13 +97,13 @@
           resetAutoSlide();
       }
 
-      // Function to send height to parent (for iframe embedding)
       function sendDimensions() {
           const height = document.documentElement.scrollHeight;
           window.parent.postMessage({ height: height }, '*');
+          console.log('Height sent:', height); // Debug log
       }
 
-      fetch('https://usernamenotavailable12.github.io/Slider/slidesData.json') // Use absolute URL for GitHub Pages
+      fetch('./slidesData.json')
           .then(response => response.json())
           .then(data => {
               const currentLocale = document.documentElement.lang || 'en';
@@ -154,12 +152,18 @@
               });
 
               resetAutoSlide();
-              sendDimensions(); // Send initial height after slides load
-              window.addEventListener('resize', sendDimensions); // Update on resize
+              sendDimensions(); // Initial height
           })
           .catch(error => {
               console.error('Error loading slides data:', error);
           });
+
+      // Debounced resize handler
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(sendDimensions, 200); // Debounce by 200ms
+      });
   }
 
   init();
