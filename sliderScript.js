@@ -83,7 +83,6 @@
           slidesContainer.releasePointerCapture(event.pointerId);
           const finalDelta = (event.clientX - startX) * pxToVw;
           if (Math.abs(finalDelta) < dragThreshold) {
-              // Use root.elementFromPoint instead of document.elementFromPoint
               const tappedEl = root.elementFromPoint ? root.elementFromPoint(event.clientX, event.clientY) : document.elementFromPoint(event.clientX, event.clientY);
               if (tappedEl) {
                   setTimeout(() => tappedEl.click(), 0);
@@ -100,7 +99,13 @@
           resetAutoSlide();
       }
 
-      fetch('./slidesData.json')
+      // Function to send height to parent (for iframe embedding)
+      function sendDimensions() {
+          const height = document.documentElement.scrollHeight;
+          window.parent.postMessage({ height: height }, '*');
+      }
+
+      fetch('https://usernamenotavailable12.github.io/Slider/slidesData.json') // Use absolute URL for GitHub Pages
           .then(response => response.json())
           .then(data => {
               const currentLocale = document.documentElement.lang || 'en';
@@ -149,6 +154,8 @@
               });
 
               resetAutoSlide();
+              sendDimensions(); // Send initial height after slides load
+              window.addEventListener('resize', sendDimensions); // Update on resize
           })
           .catch(error => {
               console.error('Error loading slides data:', error);
@@ -157,18 +164,3 @@
 
   init();
 })();
-
-function sendHeight() {
-  const height = document.documentElement.scrollHeight;
-  window.parent.postMessage({ height: height }, '*');
-}
-
-
-fetch('https://usernamenotavailable12.github.io/Slider/slidesData.json')
-  .then(response => response.json())
-  .then(data => {
-
-      resetAutoSlide();
-      sendHeight(); 
-      window.addEventListener('resize', sendHeight); 
-  });
