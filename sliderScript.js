@@ -1,8 +1,6 @@
 
-  // Get the shadow root by referencing the current script’s root node.
-  const root = document.currentScript.getRootNode();
-  // Query the carousel container from within the shadow root.
-  const container = root.querySelector('#carousel');
+  // Define the container element.
+  const container = document.getElementById('carousel');
 
   // Define the slide width in vw.
   const slideWidth = 100; // Each slide is 100vw wide.
@@ -15,7 +13,7 @@
   let currentSlide = 0;
   let totalSlides = 0;
   let autoSlideInterval;
-  const autoSlideIntervalTime = 5000; // autoslide every 5000ms
+  const autoSlideIntervalTime = 5000; // autoslide every 115 seconds
 
   let isDragging = false;
   let startX = 0;
@@ -112,7 +110,6 @@
   fetch('https://usernamenotavailable12.github.io/Slider/slidesData.json')
     .then(response => response.json())
     .then(data => {
-      // Get the language from the main document.
       const currentLocale = document.documentElement.lang || 'en';
       const slidesData = data[currentLocale] || data['en'];
       totalSlides = slidesData.length;
@@ -162,13 +159,13 @@
       addDragListeners(slidesContainer);
 
       // Navigation buttons.
-      root.querySelector('#prevBtn').addEventListener('click', () => {
+      document.getElementById('prevBtn').addEventListener('click', () => {
         const prev = (currentSlide === 0) ? totalSlides - 1 : currentSlide - 1;
         showSlide(prev);
         prevTranslate = -slideWidth * prev;
         resetAutoSlide();
       });
-      root.querySelector('#nextBtn').addEventListener('click', () => {
+      document.getElementById('nextBtn').addEventListener('click', () => {
         const next = (currentSlide === totalSlides - 1) ? 0 : currentSlide + 1;
         showSlide(next);
         prevTranslate = -slideWidth * next;
