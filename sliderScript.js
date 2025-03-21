@@ -1,4 +1,5 @@
 (function() {
+  // Use 'this' as the root when executed in Shadow DOM, fallback to document otherwise
   var root = this && this.querySelector ? this : document;
 
   function init() {
@@ -97,12 +98,6 @@
           resetAutoSlide();
       }
 
-      function updateHeight() {
-          const carouselHeight = container.offsetHeight; // Height of #carousel
-          window.parent.postMessage({ height: carouselHeight }, '*');
-          console.log('Carousel height sent:', carouselHeight); // Debug
-      }
-
       fetch('https://usernamenotavailable12.github.io/Slider/slidesData.json')
           .then(response => response.json())
           .then(data => {
@@ -152,22 +147,10 @@
               });
 
               resetAutoSlide();
-              updateHeight(); // Initial height
-              window.addEventListener('load', updateHeight); // After images load
           })
           .catch(error => {
               console.error('Error loading slides data:', error);
           });
-
-      // Real-time height updates
-      let resizeTimeout;
-      window.addEventListener('resize', () => {
-          clearTimeout(resizeTimeout);
-          resizeTimeout = setTimeout(updateHeight, 100); // Debounce 100ms
-      });
-
-      // Poll for height changes
-      setInterval(updateHeight, 250); // 250ms polling
   }
 
   init();
