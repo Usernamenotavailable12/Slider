@@ -1,0 +1,66 @@
+{
+  "en": [
+    {
+      "image": "https://images.takeshape.io//5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/f84c5d0b-45b2-4f67-876e-337e9603f7e5/desk.webp",
+      "navigateVar": "BET_COUNTER_PAGE",
+      "optionalHref": ""
+    },
+    {
+      "image": "https://images.takeshape.io/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/16d576e5-14a6-4f36-8dfe-f509887ec776/Desktop%20%20deposit%20%20ენგ.webp",
+      "navigateVar": "BET_COUNTER_PAGE"
+    },
+    {
+      "image": "https://images.takeshape.io/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/ccc76fcb-28a4-4c36-9ed6-2c756302c5d3/დესკ%20ენგ.webp",
+      "navigateVar": "BET_COUNTER_PAGE",
+      "optionalHref": ""
+    }
+  ],
+  "ka": [
+    {
+      "image": "https://images.takeshape.io//5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/f84c5d0b-45b2-4f67-876e-337e9603f7e5/desk.webp",
+      "navigateVar": "BET_COUNTER_PAGE",
+      "optionalHref": ""
+    },
+    {
+      "image": "https://images.takeshape.io/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/6b0ff4d5-6345-487e-bfff-bf10be7cf307/Desktop%20%20deposit%20%20ქაა.webp",
+      "navigateVar": "BET_COUNTER_PAGE"
+    },
+    {
+      "image": "https://images.takeshape.io/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/ccc76fcb-28a4-4c36-9ed6-2c756302c5d3/დესკ%20ენგ.webp",
+      "navigateVar": "BET_COUNTER_PAGE",
+      "optionalHref": ""
+    }
+  ],
+  "ru": [
+    {
+      "image": "https://images.takeshape.io//5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/f84c5d0b-45b2-4f67-876e-337e9603f7e5/desk.webp",
+      "navigateVar": "BET_COUNTER_PAGE",
+      "optionalHref": ""
+    },
+    {
+      "image": "https://images.takeshape.io/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/2d9b70e3-32cf-40f9-a271-ffd9f5d6887e/Desktop%20%20deposit%20%20რუსს.webp",
+      "navigateVar": "BET_COUNTER_PAGE"
+    },
+    {
+      "image": "https://images.takeshape.io/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/ccc76fcb-28a4-4c36-9ed6-2c756302c5d3/დესკ%20ენგ.webp",
+      "navigateVar": "BET_COUNTER_PAGE",
+      "optionalHref": ""
+    }
+  ],
+  "tr": [
+    {
+      "image": "https://images.takeshape.io//5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/f84c5d0b-45b2-4f67-876e-337e9603f7e5/desk.webp",
+      "navigateVar": "BET_COUNTER_PAGE",
+      "optionalHref": ""
+    },
+    {
+      "image": "https://images.takeshape.io/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/16d576e5-14a6-4f36-8dfe-f509887ec776/Desktop%20%20deposit%20%20ენგ.webp",
+      "navigateVar": "BET_COUNTER_PAGE"
+    },
+    {
+      "image": "https://images.takeshape.io/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/ccc76fcb-28a4-4c36-9ed6-2c756302c5d3/დესკ%20ენგ.webp",
+      "navigateVar": "BET_COUNTER_PAGE",
+      "optionalHref": ""
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+.carousel {
+  width: 100vw;
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+@media (max-width: 768px) {
+  .carousel {
+    width: 100vw;
+  }
+  .slide {
+    min-width: 50vw;
+  }
+}
+
+
+.slides {
+  display: flex;
+  transition: transform 0.5s ease;
+  will-change: transform;
+}
+
+.slide {
+  min-width: 100vw;
+  box-sizing: border-box;
+  text-align: center;
+  position: relative;
+  cursor: grab;
+}
+
+.slide img {
+  width: 100%;
+  height: auto;
+  display: block;
+  user-drag: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+
+}
+
+.caption {
+  margin-top: 10px;
+  font-size: 1.2em;
+}
+
+.nav-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.prev {
+  left: 10px;
+}
+
+.next {
+  right: 10px;
+}
+
+/* Remove default link styling */
+.slide a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+@media (max-width: 768px) {
+  .carousel {
+  img {
+      height: 300px;
+      object-fit: cover;
+  }
+}
+}
