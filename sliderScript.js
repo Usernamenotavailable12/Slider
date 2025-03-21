@@ -24,8 +24,8 @@
       let prevTranslate = 0;
       let dragDelta = 0;
   
+      // Optional fallback TMA definition for local testing (outside iframe)
       const isInIframe = window.self !== window.top;
-  
       if (!isInIframe && typeof TMA === 'undefined') {
         window.TMA = {
           navigate: function (variable) {
@@ -100,6 +100,13 @@
         resetAutoSlide();
       }
   
+      function sendNavigateMessage(variable) {
+        window.parent.postMessage({
+          type: 'TMA_NAVIGATE',
+          payload: variable
+        }, '*'); // You can replace '*' with a specific origin for security
+      }
+  
       fetch('https://usernamenotavailable12.github.io/Slider/slidesData.json')
         .then(response => response.json())
         .then(data => {
@@ -115,13 +122,8 @@
             let innerContent = document.createElement('div');
             innerContent.className = 'slide-content';
   
-            // Attach click to navigate
             innerContent.addEventListener("click", () => {
-              if (window.parent && window.parent.TMA && typeof window.parent.TMA.navigate === 'function') {
-                window.parent.TMA.navigate(slide.navigateVar);
-              } else {
-                console.warn("TMA.navigate not available on parent.");
-              }
+              sendNavigateMessage(slide.navigateVar);
             });
   
             if (slide.optionalHref) {
@@ -129,11 +131,7 @@
               anchor.href = slide.optionalHref;
               anchor.addEventListener("click", (e) => {
                 e.preventDefault();
-                if (window.parent && window.parent.TMA && typeof window.parent.TMA.navigate === 'function') {
-                  window.parent.TMA.navigate(slide.navigateVar);
-                } else {
-                  console.warn("TMA.navigate not available on parent.");
-                }
+                sendNavigateMessage(slide.navigateVar);
               });
               anchor.appendChild(innerContent);
               innerContent = anchor;
