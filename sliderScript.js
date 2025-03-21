@@ -115,7 +115,7 @@
     }
 
     // Load slide data from an external JSON file.
-    fetch('slidesData.json')
+    fetch('./slidesData.json')
       .then(response => response.json())
       .then(data => {
         // Use the language from the main document.
