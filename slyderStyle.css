@@ -80,7 +80,7 @@ body {
 @media (max-width: 768px) {
   .carousel {
   img {
-      height: 300px;
+      height: 220px;
       object-fit: cover;
   }
 }
