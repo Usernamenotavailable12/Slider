@@ -152,35 +152,47 @@
       slidesData.forEach(slide => {
         const slideDiv = document.createElement('div');
         slideDiv.className = 'slide';
-
+      
         let innerContent = document.createElement('div');
         innerContent.className = 'slide-content';
+      
 
-        innerContent.addEventListener("click", () => {
-          sendNavigateMessage(slide.NavigateVar);
-        });
-
-        if (slide.OptionalHref) {
+        if (slide.optionalHref) {
           const anchor = document.createElement('a');
-          anchor.href = slide.OptionalHref;
+          anchor.href = 'https://www.ambassadoribet.com/' + slide.optionalHref;
+      
+          anchor.addEventListener("click", (e) => {
+            e.preventDefault();
+            window.parent.postMessage({
+              type: 'TMA_HREF',
+              payload: 'https://www.ambassadoribet.com/' + slide.optionalHref
+            }, '*');
+          });
+      
           anchor.appendChild(innerContent);
           innerContent = anchor;
         }
+      
 
+        innerContent.addEventListener("click", () => {
+          sendNavigateMessage(slide.navigateVar);
+        });
+      
         const img = document.createElement('img');
-        img.src = `https://www.ambassadoribet.com/_internal/ts-images/${slide.image.path}`;
-        img.alt = slide.caption || 'Slide Image';
+        img.src = slide.image.url;
+        img.alt = "Slide Image";
         img.loading = "lazy";
-
+      
         const caption = document.createElement('div');
-/*         caption.className = 'slide-caption';
-        caption.textContent = slide.caption || ""; */
-
+        // caption.className = 'slide-caption';
+        // caption.textContent = slide.caption || "";
+      
         innerContent.appendChild(img);
         innerContent.appendChild(caption);
         slideDiv.appendChild(innerContent);
         slidesContainer.appendChild(slideDiv);
       });
+      
 
       slidesContainer.style.width = (slideWidth * totalSlides) + 'vw';
             
