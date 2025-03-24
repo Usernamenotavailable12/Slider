@@ -19,8 +19,10 @@
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-TakeShape-Token': token
+        'X-TakeShape-Token': token,
+        'Cache-control': 'max-age=180, public'
       },
+      cache: 'default',
       body: JSON.stringify({
         query: `
           query GetSlides($locale: String!) {
