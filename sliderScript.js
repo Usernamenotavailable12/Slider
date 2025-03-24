@@ -12,38 +12,37 @@
 
     const lang = getQueryParam('lang', 'en');
     const page = getQueryParam('page', 'home').toLowerCase();
-    const endpoint = 'https://eu-west-2.cdn.hygraph.com/content/cm81rsh8f01ni07uowrtk7da5/master'; // Replace this!
+    const endpoint = 'https://eu-west-2.cdn.hygraph.com/content/cm81rsh8f01ni07uowrtk7da5/master';
 
     fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         query: `
-  query ($language: Languages!, $page: Pages!) {
-    settings(where: { id: "cm8mrleg9rsya07mem4ovwjcc"}) {
-      autoSlideInterval
-      slideWidth
-    }
-    slides(
-      where: {
-        language: $language,
-        pages_contains_some: [$page]
-      },
-      orderBy: sortOrder_ASC
-    ) {
-      image { url }
-      caption
-      navigateVar
-      optionalHref
-      pages
-      sortOrder
-    }
-  }
-`,
-
+          query ($language: Languages!, $page: Pages!) {
+            settings(where: { id: "cm8mrleg9rsya07mem4ovwjcc"}) {
+              autoSlideInterval
+              slideWidth
+            }
+            slides(
+              where: {
+                language: $language,
+                pages_contains_some: [$page]
+              },
+              orderBy: sortOrder_ASC
+            ) {
+              image { url }
+              caption
+              navigateVar
+              optionalHref
+              pages
+              sortOrder
+            }
+          }
+        `,
         variables: {
-          language: lang, // e.g. "ka"
-          page: page      // e.g. "home"
+          language: lang, 
+          page: page      
         }
       })
     })
@@ -147,7 +146,7 @@
 
           if (slide.optionalHref) {
             const anchor = document.createElement('a');
-            anchor.href = slide.optionalHref;
+            anchor.href =  'https://www.ambassadoribet.com/' + slide.optionalHref;
             anchor.addEventListener("click", e => {
               e.preventDefault();
               sendNavigateMessage(slide.navigateVar);
