@@ -1,126 +1,138 @@
 (function () {
-  // Use 'this' as the root when executed in Shadow DOM, fallback to document otherwise
   var root = this && this.querySelector ? this : document;
 
-  // Helper to get lang from URL query string
-  function getLangFromURL() {
+  function getQueryParam(key, fallback = '') {
     const params = new URLSearchParams(window.location.search);
-    return params.get('lang') || 'en';
+    return params.get(key) || fallback;
   }
 
   function init() {
-    var container = root.querySelector('#carousel');
-    if (!container) {
-      return setTimeout(init, 50);
+    const container = root.querySelector('#carousel');
+    if (!container) return setTimeout(init, 50);
+
+    const lang = getQueryParam('lang', 'en');
+    const page = getQueryParam('page', 'home').toLowerCase();
+    const endpoint = 'https://eu-west-2.cdn.hygraph.com/content/cm81rsh8f01ni07uowrtk7da5/master'; // Replace this!
+
+    fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `
+  query ($language: Languages!, $page: Pages!) {
+    settings(where: { id: "cm8mrleg9rsya07mem4ovwjcc"}) {
+      autoSlideInterval
+      slideWidth
     }
+    slides(
+      where: {
+        language: $language,
+        pages_contains_some: [$page]
+      },
+      orderBy: sortOrder_ASC
+    ) {
+      image { url }
+      caption
+      navigateVar
+      optionalHref
+      pages
+      sortOrder
+    }
+  }
+`,
 
-    const slideWidth = 100;
-    const pxToVw = 100 / window.innerWidth;
-    const dragThreshold = 20 * pxToVw;
-    const slideChangeThreshold = 100 * pxToVw;
-
-    let currentSlide = 0;
-    let totalSlides = 0;
-    let autoSlideInterval;
-    const autoSlideIntervalTime = 5000;
-
-    let isDragging = false;
-    let startX = 0;
-    let currentTranslate = 0;
-    let prevTranslate = 0;
-    let dragDelta = 0;
-
-    // Optional fallback TMA definition for local testing (outside iframe)
-    const isInIframe = window.self !== window.top;
-    if (!isInIframe && typeof TMA === 'undefined') {
-      window.TMA = {
-        navigate: function (variable) {
-          console.log("Navigating to: " + variable);
+        variables: {
+          language: lang, // e.g. "ka"
+          page: page      // e.g. "home"
         }
-      };
-    }
+      })
+    })
+    
+      .then(res => res.json())
+      .then(({ data }) => {
+        if (!data) return console.error('No data from CMS');
 
-    function showSlide(index) {
-      const slidesContainer = container.querySelector('#slides');
-      slidesContainer.style.transition = 'transform 0.5s ease';
-      slidesContainer.style.transform = 'translateX(' + (-slideWidth * index) + 'vw)';
-      currentSlide = index;
-    }
+        const settings = data.settings?.[0] || {};
+        const slideWidth = settings.slideWidth || 100;
+        const autoSlideIntervalTime = settings.autoSlideInterval || 5000;
+        const slidesData = data.slides;
 
-    function resetAutoSlide() {
-      clearInterval(autoSlideInterval);
-      autoSlideInterval = setInterval(() => {
-        const next = (currentSlide === totalSlides - 1) ? 0 : currentSlide + 1;
-        showSlide(next);
-        prevTranslate = -slideWidth * next;
-      }, autoSlideIntervalTime);
-    }
-
-    function addDragListeners(slidesContainer) {
-      slidesContainer.addEventListener('pointerdown', dragStart);
-      slidesContainer.addEventListener('pointermove', dragMove);
-      slidesContainer.addEventListener('pointerup', dragEnd);
-      slidesContainer.addEventListener('pointercancel', dragEnd);
-    }
-
-    function dragStart(event) {
-      isDragging = true;
-      dragDelta = 0;
-      startX = event.clientX;
-      const slidesContainer = container.querySelector('#slides');
-      slidesContainer.style.transition = 'none';
-      slidesContainer.setPointerCapture(event.pointerId);
-      clearInterval(autoSlideInterval);
-    }
-
-    function dragMove(event) {
-      if (!isDragging) return;
-      const currentX = event.clientX;
-      const deltaX = (currentX - startX) * pxToVw;
-      dragDelta = deltaX;
-      currentTranslate = prevTranslate + deltaX;
-      const slidesContainer = container.querySelector('#slides');
-      slidesContainer.style.transform = `translateX(${currentTranslate}vw)`;
-    }
-
-    function dragEnd(event) {
-      if (!isDragging) return;
-      isDragging = false;
-      const slidesContainer = container.querySelector('#slides');
-      slidesContainer.releasePointerCapture(event.pointerId);
-      const finalDelta = (event.clientX - startX) * pxToVw;
-      if (Math.abs(finalDelta) < dragThreshold) {
-        const tappedEl = root.elementFromPoint ? root.elementFromPoint(event.clientX, event.clientY) : document.elementFromPoint(event.clientX, event.clientY);
-        if (tappedEl) {
-          setTimeout(() => tappedEl.click(), 0);
-        }
-      } else {
-        if (finalDelta < -slideChangeThreshold && currentSlide < totalSlides - 1) {
-          currentSlide++;
-        } else if (finalDelta > slideChangeThreshold && currentSlide > 0) {
-          currentSlide--;
-        }
-      }
-      showSlide(currentSlide);
-      prevTranslate = -slideWidth * currentSlide;
-      resetAutoSlide();
-    }
-
-    function sendNavigateMessage(variable) {
-      window.parent.postMessage({
-        type: 'TMA_NAVIGATE',
-        payload: variable
-      }, '*'); // You can replace '*' with a specific origin for security
-    }
-
-    const currentLocale = getLangFromURL();
-
-    fetch('https://usernamenotavailable12.github.io/Slider/slidesData.json')
-      .then(response => response.json())
-      .then(data => {
-        const slidesData = data[currentLocale] || data['en'];
-        totalSlides = slidesData.length;
         const slidesContainer = container.querySelector('#slides');
+        let currentSlide = 0;
+        let totalSlides = slidesData.length;
+        let autoSlideInterval;
+
+        let isDragging = false;
+        let startX = 0;
+        let currentTranslate = 0;
+        let prevTranslate = 0;
+        let dragDelta = 0;
+
+        const pxToVw = 100 / window.innerWidth;
+        const dragThreshold = 20 * pxToVw;
+        const slideChangeThreshold = 100 * pxToVw;
+
+        function showSlide(index) {
+          slidesContainer.style.transition = 'transform 0.5s ease';
+          slidesContainer.style.transform = `translateX(${-slideWidth * index}vw)`;
+          currentSlide = index;
+        }
+
+        function startAutoSlide() {
+          clearInterval(autoSlideInterval);
+          autoSlideInterval = setInterval(() => {
+            const next = (currentSlide + 1) % totalSlides;
+            showSlide(next);
+            prevTranslate = -slideWidth * next;
+          }, autoSlideIntervalTime);
+        }
+
+        function stopAutoSlide() {
+          clearInterval(autoSlideInterval);
+        }
+
+        function handleDragStart(event) {
+          isDragging = true;
+          dragDelta = 0;
+          startX = event.clientX;
+          slidesContainer.style.transition = 'none';
+          slidesContainer.setPointerCapture(event.pointerId);
+          stopAutoSlide();
+        }
+
+        function handleDragMove(event) {
+          if (!isDragging) return;
+          const deltaX = (event.clientX - startX) * pxToVw;
+          dragDelta = deltaX;
+          currentTranslate = prevTranslate + deltaX;
+          slidesContainer.style.transform = `translateX(${currentTranslate}vw)`;
+        }
+
+        function handleDragEnd(event) {
+          if (!isDragging) return;
+          isDragging = false;
+          slidesContainer.releasePointerCapture(event.pointerId);
+          const finalDelta = (event.clientX - startX) * pxToVw;
+
+          if (Math.abs(finalDelta) < dragThreshold) {
+            const tappedEl = root.elementFromPoint(event.clientX, event.clientY);
+            if (tappedEl) setTimeout(() => tappedEl.click(), 0);
+          } else {
+            if (finalDelta < -slideChangeThreshold && currentSlide < totalSlides - 1) {
+              currentSlide++;
+            } else if (finalDelta > slideChangeThreshold && currentSlide > 0) {
+              currentSlide--;
+            }
+          }
+
+          showSlide(currentSlide);
+          prevTranslate = -slideWidth * currentSlide;
+          startAutoSlide();
+        }
+
+        function sendNavigateMessage(variable) {
+          window.parent.postMessage({ type: 'TMA_NAVIGATE', payload: variable }, '*');
+        }
 
         slidesData.forEach(slide => {
           const slideDiv = document.createElement('div');
@@ -136,7 +148,7 @@
           if (slide.optionalHref) {
             const anchor = document.createElement('a');
             anchor.href = slide.optionalHref;
-            anchor.addEventListener("click", (e) => {
+            anchor.addEventListener("click", e => {
               e.preventDefault();
               sendNavigateMessage(slide.navigateVar);
             });
@@ -145,11 +157,13 @@
           }
 
           const img = document.createElement('img');
-          img.src = slide.image;
+          img.src = slide.image.url;
           img.alt = "Slide Image";
           img.loading = "lazy";
 
           const caption = document.createElement('div');
+/*           caption.className = 'slide-caption';
+          caption.textContent = slide.caption || ""; */
 
           innerContent.appendChild(img);
           innerContent.appendChild(caption);
@@ -158,27 +172,30 @@
         });
 
         slidesContainer.style.width = (slideWidth * totalSlides) + 'vw';
-        addDragListeners(slidesContainer);
 
-        root.querySelector('#prevBtn').addEventListener('click', () => {
+        slidesContainer.addEventListener('pointerdown', handleDragStart);
+        slidesContainer.addEventListener('pointermove', handleDragMove);
+        slidesContainer.addEventListener('pointerup', handleDragEnd);
+        slidesContainer.addEventListener('pointercancel', handleDragEnd);
+
+        root.querySelector('#prevBtn')?.addEventListener('click', () => {
           const prev = (currentSlide === 0) ? totalSlides - 1 : currentSlide - 1;
           showSlide(prev);
           prevTranslate = -slideWidth * prev;
-          resetAutoSlide();
+          startAutoSlide();
         });
 
-        root.querySelector('#nextBtn').addEventListener('click', () => {
-          const next = (currentSlide === totalSlides - 1) ? 0 : currentSlide + 1;
+        root.querySelector('#nextBtn')?.addEventListener('click', () => {
+          const next = (currentSlide + 1) % totalSlides;
           showSlide(next);
           prevTranslate = -slideWidth * next;
-          resetAutoSlide();
+          startAutoSlide();
         });
 
-        resetAutoSlide();
+        showSlide(0);
+        startAutoSlide();
       })
-      .catch(error => {
-        console.error('Error loading slides data:', error);
-      });
+      .catch(err => console.error('CMS fetch error:', err));
   }
 
   init();
