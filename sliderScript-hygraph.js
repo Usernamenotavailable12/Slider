@@ -16,7 +16,8 @@
 
     fetch(endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Cache-control': 'max-age=180, public' },
+      cache: 'default',
       body: JSON.stringify({
         query: `
           query ($language: Languages!, $page: Pages!) {
