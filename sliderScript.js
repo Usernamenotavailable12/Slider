@@ -147,10 +147,6 @@
           if (slide.optionalHref) {
             const anchor = document.createElement('a');
             anchor.href =  'https://www.ambassadoribet.com/' + slide.optionalHref;
-            anchor.addEventListener("click", e => {
-              e.preventDefault();
-              sendNavigateMessage(slide.navigateVar);
-            });
             anchor.appendChild(innerContent);
             innerContent = anchor;
           }
