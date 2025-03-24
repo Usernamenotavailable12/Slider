@@ -30,6 +30,7 @@
                 pages_contains_some: [$page]
               },
               orderBy: sortOrder_ASC
+              first: 50
             ) {
               image { url }
               caption
