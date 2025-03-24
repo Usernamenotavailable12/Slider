@@ -12,8 +12,8 @@
 
     const lang = getQueryParam('lang', 'ka');
     const page = getQueryParam('page', 'home');
-    const endpoint = 'https://api.takeshape.io/project/f2b70d9b-56f9-4d2d-be98-874fcbc02a46/production/9c111aa7e748ee927a47ba6998bb277b0e04edd434d9b79e7786c55cb5ade4f0/graphql';
-    const token = '86f2864b8683471ab46e8958c17edaaa'; // 🔁 replace
+    const endpoint = 'https://api.takeshape.io/project/f2b70d9b-56f9-4d2d-be98-874fcbc02a46/graphql';
+    const token = '86f2864b8683471ab46e8958c17edaaa'; 
 
     fetch(endpoint, {
       method: 'POST',
@@ -88,7 +88,12 @@
       function dragStart(event) {
         isDragging = true;
         dragDelta = 0;
-        startX = event.clientX;
+        
+        if (event.type === 'touchstart') {
+          startX = event.touches[0].clientX;
+        } else {
+          startX = event.clientX;
+        }
         slidesContainer.style.transition = 'none';
         slidesContainer.setPointerCapture(event.pointerId);
         stopAutoSlide();
@@ -96,7 +101,15 @@
 
       function dragMove(event) {
         if (!isDragging) return;
-        const deltaX = (event.clientX - startX) * pxToVw;
+
+        if (event.type === 'touchmove') {
+          currentX = event.touches[0].clientX;
+          event.preventDefault();
+        } else {
+          currentX = event.clientX;
+        }
+
+        const deltaX = (currentX - startX) * pxToVw;
         dragDelta = deltaX;
         currentTranslate = prevTranslate + deltaX;
         slidesContainer.style.transform = `translateX(${currentTranslate}vw)`;
@@ -106,7 +119,15 @@
         if (!isDragging) return;
         isDragging = false;
         slidesContainer.releasePointerCapture(event.pointerId);
-        const finalDelta = (event.clientX - startX) * pxToVw;
+
+        let endX;
+        if (event.type === 'touchend') {
+          endX = event.changedTouches[0].clientX;
+        } else {
+          endX = event.clientX;
+        }
+
+        const finalDelta = (endX - startX) * pxToVw;
 
         if (Math.abs(finalDelta) < dragThreshold) {
           const tappedEl = root.elementFromPoint(event.clientX, event.clientY);
@@ -162,11 +183,20 @@
       });
 
       slidesContainer.style.width = (slideWidth * totalSlides) + 'vw';
+            
+      const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
 
-      slidesContainer.addEventListener('pointerdown', dragStart);
-      slidesContainer.addEventListener('pointermove', dragMove);
-      slidesContainer.addEventListener('pointerup', dragEnd);
-      slidesContainer.addEventListener('pointercancel', dragEnd);
+      if(isTouchDevice){
+        slidesContainer.addEventListener('touchstart', dragStart, { passive: false });
+        slidesContainer.addEventListener('touchmove', dragMove, { passive: false });
+        slidesContainer.addEventListener('touchend', dragEnd);
+        slidesContainer.addEventListener('touchcancel', dragEnd);
+      } else {
+        slidesContainer.addEventListener('pointerdown', dragStart, { passive: false });
+        slidesContainer.addEventListener('pointermove', dragMove, { passive: false });
+        slidesContainer.addEventListener('pointerup', dragEnd);
+        slidesContainer.addEventListener('pointercancel', dragEnd);
+      }
 
       root.querySelector('#prevBtn')?.addEventListener('click', () => {
         const prev = (currentSlide === 0) ? totalSlides - 1 : currentSlide - 1;
