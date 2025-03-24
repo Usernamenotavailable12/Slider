@@ -12,17 +12,15 @@
 
     const lang = getQueryParam('lang', 'ka');
     const page = getQueryParam('page', 'home');
-    const endpoint = 'https://api.takeshape.io/project/f2b70d9b-56f9-4d2d-be98-874fcbc02a46/graphql';
+    const endpoint = 'https://api.takeshape.io/project/f2b70d9b-56f9-4d2d-be98-874fcbc02a46/production/graphql';
     const token = '86f2864b8683471ab46e8958c17edaaa'; 
 
     fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-TakeShape-Token': token,
-        'Cache-control': 'max-age=180, public'
+        'X-TakeShape-Token': token
       },
-      cache: 'default',
       body: JSON.stringify({
         query: `
           query GetSlides($locale: String!) {
@@ -181,7 +179,7 @@
         });
       
         const img = document.createElement('img');
-        img.src = slide.image.url;
+        img.src = 'https://www.ambassadoribet.com/_internal/ts-images/' + slide.image.path;
         img.alt = "Slide Image";
         img.loading = "lazy";
       
