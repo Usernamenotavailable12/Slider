@@ -6,6 +6,7 @@ window.addEventListener('message', function (event) {
   if (type === 'TMA_NAVIGATE') {
     if (typeof TMA !== 'undefined' && typeof TMA.navigate === 'function') {
       TMA.navigate(payload);
+      console.log(payload);
     } else {
       console.warn('TMA.navigate is not available in the parent window.');
     }
