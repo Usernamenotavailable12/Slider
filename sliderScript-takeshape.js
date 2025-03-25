@@ -89,50 +89,54 @@
         function dragStart(event) {
           isDragging = true;
           dragDelta = 0;
-
-          if (event.type === 'touchstart') {
+          slidesContainer.style.transition = 'none';
+          stopAutoSlide();
+        
+          if (event.type.startsWith('touch')) {
             startX = event.touches[0].clientX;
           } else {
             startX = event.clientX;
+            // For pointer events (desktop), capture the pointer.
+            if (typeof event.pointerId !== 'undefined') {
+              slidesContainer.setPointerCapture(event.pointerId);
+            }
           }
-          slidesContainer.style.transition = 'none';
-          slidesContainer.setPointerCapture(event.pointerId);
-          stopAutoSlide();
         }
-
+        
         function dragMove(event) {
           if (!isDragging) return;
-
           let currentX;
-          if (event.type === 'touchmove') {
+          if (event.type.startsWith('touch')) {
             currentX = event.touches[0].clientX;
             event.preventDefault();
           } else {
             currentX = event.clientX;
           }
-
           const deltaX = (currentX - startX) * pxToVw;
-          dragDelta = deltaX;
           currentTranslate = prevTranslate + deltaX;
           slidesContainer.style.transform = `translateX(${currentTranslate}vw)`;
         }
-
+        
         function dragEnd(event) {
           if (!isDragging) return;
           isDragging = false;
-          slidesContainer.releasePointerCapture(event.pointerId);
-
+        
+          // Release pointer capture only for pointer events.
+          if (!event.type.startsWith('touch') && typeof event.pointerId !== 'undefined') {
+            slidesContainer.releasePointerCapture(event.pointerId);
+          }
+        
           let endX;
-          if (event.type === 'touchend') {
+          if (event.type.startsWith('touch')) {
             endX = event.changedTouches[0].clientX;
           } else {
             endX = event.clientX;
           }
-
           const finalDelta = (endX - startX) * pxToVw;
-
+        
           if (Math.abs(finalDelta) < dragThreshold) {
-            const tappedEl = root.elementFromPoint(event.clientX, event.clientY);
+            // Consider it a tap if the movement is minimal.
+            const tappedEl = root.elementFromPoint(endX, event.type.startsWith('touch') ? event.changedTouches[0].clientY : event.clientY);
             if (tappedEl) setTimeout(() => tappedEl.click(), 0);
           } else {
             if (finalDelta < -slideChangeThreshold && currentSlide < totalSlides - 1) {
@@ -141,11 +145,11 @@
               currentSlide--;
             }
           }
-
           showSlide(currentSlide);
           prevTranslate = -slideWidth * currentSlide;
           startAutoSlide();
         }
+        
 
         function sendNavigateMessage(variable) {
           window.parent.postMessage({ type: 'TMA_NAVIGATE', payload: variable }, '*');
