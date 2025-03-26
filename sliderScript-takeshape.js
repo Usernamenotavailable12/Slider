@@ -6,6 +6,11 @@
     return params.get(key) || fallback;
   }
 
+  // Helper function to only replace spaces with %20.
+  function fixUrl(url) {
+    return url.replace(/ /g, '%20');
+  }
+
   function init() {
     const container = root.querySelector('#carousel');
     if (!container) return setTimeout(init, 50);
@@ -48,7 +53,7 @@
       .then(({ data }) => {
         const allSlides = data.getSlideList.items || [];
 
-        // Filter by page and sort by sortOrder
+        // Filter by page and sort by sortOrder.
         const slidesData = allSlides
           .filter(slide => slide.pages.includes(page))
           .sort((a, b) => a.sortOrder - b.sortOrder);
@@ -160,12 +165,12 @@
 
           if (slide.OptionalHref) {
             const anchor = document.createElement('a');
-            anchor.href = 'https://www.ambassadoribet.com/' + slide.OptionalHref;
+            anchor.href = slide.OptionalHref;
             anchor.addEventListener("click", (e) => {
               e.preventDefault();
               window.parent.postMessage({
                 type: 'TMA_HREF',
-                payload: 'https://www.ambassadoribet.com/' + slide.OptionalHref
+                payload: slide.OptionalHref
               }, '*');
             });
             anchor.appendChild(innerContent);
@@ -176,29 +181,30 @@
             sendNavigateMessage(slide.NavigateVar);
           });
 
-          // Create a picture element for responsive images
+          // Create a picture element for responsive images.
           const picture = document.createElement('picture');
 
-          // Mobile-specific image for screen widths 768px and below using the API-provided imageMobile path.
+          // Mobile-specific image for screen widths 768px and below.
           const sourceMobile = document.createElement('source');
           sourceMobile.media = "(max-width: 768px)";
-          sourceMobile.srcset = 'https://www.ambassadoribet.com/_internal/ts-images/' + encodeURI(slide.imageMobile.path);
+          sourceMobile.srcset = 'https://www.ambassadoribet.com/_internal/ts-images/' + fixUrl(slide.imageMobile.path);
           picture.appendChild(sourceMobile);
 
-          // Default image for larger screens using the desktop image.
+          // Default image for larger screens.
           const img = document.createElement('img');
-          img.src = 'https://www.ambassadoribet.com/_internal/ts-images/' + encodeURI(slide.image.path);
+          img.src = 'https://www.ambassadoribet.com/_internal/ts-images/' + fixUrl(slide.image.path);
           img.alt = "Slide Image";
           img.loading = "lazy";
           picture.appendChild(img);
 
           innerContent.appendChild(picture);
 
-          // Caption element.
+          // Caption element (if needed).
           const caption = document.createElement('div');
-/*           caption.className = 'slide-caption';
-          caption.textContent = slide.caption || "";
-          innerContent.appendChild(caption); */
+          // Uncomment these lines if you want to display captions:
+          // caption.className = 'slide-caption';
+          // caption.textContent = slide.caption || "";
+          // innerContent.appendChild(caption);
 
           slideDiv.appendChild(innerContent);
           slidesContainer.appendChild(slideDiv);
