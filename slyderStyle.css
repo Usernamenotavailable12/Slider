@@ -84,9 +84,6 @@ body {
       height: 220px;
       object-fit: cover;
   }
-  .nav-button {
-    display: none;
-  }
 }
 }
 
