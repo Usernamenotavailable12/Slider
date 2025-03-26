@@ -75,10 +75,26 @@
         let prevTranslate = 0;
         let dragDelta = 0;
 
+        // Create the indicators container.
+        const indicatorsContainer = document.createElement('div');
+        indicatorsContainer.id = 'indicators';
+
+        function updateIndicators() {
+          const dots = indicatorsContainer.querySelectorAll('.indicator-dot');
+          dots.forEach((dot, index) => {
+            if (index === currentSlide) {
+              dot.classList.add('active');
+            } else {
+              dot.classList.remove('active');
+            }
+          });
+        }
+
         function showSlide(index) {
           slidesContainer.style.transition = 'transform 0.5s ease';
           slidesContainer.style.transform = `translateX(${-slideWidth * index}vw)`;
           currentSlide = index;
+          updateIndicators();
         }
 
         function startAutoSlide() {
@@ -138,7 +154,10 @@
           }
           const finalDelta = (endX - startX) * pxToVw;
           if (Math.abs(finalDelta) < dragThreshold) {
-            const tappedEl = root.elementFromPoint(endX, event.type.startsWith('touch') ? event.changedTouches[0].clientY : event.clientY);
+            const tappedEl = root.elementFromPoint(
+              endX,
+              event.type.startsWith('touch') ? event.changedTouches[0].clientY : event.clientY
+            );
             if (tappedEl) setTimeout(() => tappedEl.click(), 0);
           } else {
             if (finalDelta < -slideChangeThreshold && currentSlide < totalSlides - 1) {
@@ -156,6 +175,7 @@
           window.parent.postMessage({ type: 'TMA_NAVIGATE', payload: variable }, '*');
         }
 
+        // Build each slide.
         slidesData.forEach(slide => {
           const slideDiv = document.createElement('div');
           slideDiv.className = 'slide';
@@ -211,6 +231,20 @@
         });
 
         slidesContainer.style.width = (slideWidth * totalSlides) + 'vw';
+
+        // Build slider indicators (dots).
+        for (let i = 0; i < totalSlides; i++) {
+          const dot = document.createElement('span');
+          dot.className = 'indicator-dot' + (i === currentSlide ? ' active' : '');
+          dot.addEventListener('click', () => {
+            showSlide(i);
+            prevTranslate = -slideWidth * i;
+            currentSlide = i;
+            startAutoSlide();
+          });
+          indicatorsContainer.appendChild(dot);
+        }
+        container.appendChild(indicatorsContainer);
 
         const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
 
