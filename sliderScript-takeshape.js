@@ -15,7 +15,7 @@
     const container = root.querySelector('#carousel');
     if (!container) return setTimeout(init, 50);
 
-    const lang = getQueryParam('lang', 'ka');
+    const lang = getQueryParam('lang', 'en');
     const page = getQueryParam('page', 'home');
     const endpoint = 'https://api.takeshape.io/project/f2b70d9b-56f9-4d2d-be98-874fcbc02a46/production/graphql';
     const token = '86f2864b8683471ab46e8958c17edaaa';
