@@ -55,12 +55,13 @@ body {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   color: white;
   border: none;
   padding: 10px;
   cursor: pointer;
   z-index: 10;
+  border-radius: 5px;
 }
 
 .prev {
@@ -83,13 +84,16 @@ body {
       height: 220px;
       object-fit: cover;
   }
+  .nav-button {
+    display: none;
+  }
 }
 }
 
 /* Position the indicators container at the bottom center */
 #indicators {
   position: absolute;
-  bottom: 10px;
+  bottom: 5%;
   width: 100%;
   text-align: center;
   z-index: 100;
