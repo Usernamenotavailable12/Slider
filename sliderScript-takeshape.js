@@ -67,7 +67,7 @@
         let currentSlide = 0;
         let totalSlides = slidesData.length;
         let autoSlideInterval;
-        let autoSlideIntervalTime = 5000;
+        let autoSlideIntervalTime = 8000;
 
         let isDragging = false;
         let startX = 0;
