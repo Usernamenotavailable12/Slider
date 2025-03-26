@@ -34,6 +34,9 @@
                 image {
                   path
                 }
+                imageMobile {
+                  path
+                }
               }
             }
           }
@@ -45,7 +48,7 @@
       .then(({ data }) => {
         const allSlides = data.getSlideList.items || [];
 
-        // ✅ Filter by page and sort by sortOrder
+        // Filter by page and sort by sortOrder
         const slidesData = allSlides
           .filter(slide => slide.pages.includes(page))
           .sort((a, b) => a.sortOrder - b.sortOrder);
@@ -96,7 +99,6 @@
             startX = event.touches[0].clientX;
           } else {
             startX = event.clientX;
-            // For pointer events (desktop), capture the pointer.
             if (typeof event.pointerId !== 'undefined') {
               slidesContainer.setPointerCapture(event.pointerId);
             }
@@ -120,12 +122,9 @@
         function dragEnd(event) {
           if (!isDragging) return;
           isDragging = false;
-        
-          // Release pointer capture only for pointer events.
           if (!event.type.startsWith('touch') && typeof event.pointerId !== 'undefined') {
             slidesContainer.releasePointerCapture(event.pointerId);
           }
-        
           let endX;
           if (event.type.startsWith('touch')) {
             endX = event.changedTouches[0].clientX;
@@ -133,9 +132,7 @@
             endX = event.clientX;
           }
           const finalDelta = (endX - startX) * pxToVw;
-        
           if (Math.abs(finalDelta) < dragThreshold) {
-            // Consider it a tap if the movement is minimal.
             const tappedEl = root.elementFromPoint(endX, event.type.startsWith('touch') ? event.changedTouches[0].clientY : event.clientY);
             if (tappedEl) setTimeout(() => tappedEl.click(), 0);
           } else {
@@ -149,7 +146,6 @@
           prevTranslate = -slideWidth * currentSlide;
           startAutoSlide();
         }
-        
 
         function sendNavigateMessage(variable) {
           window.parent.postMessage({ type: 'TMA_NAVIGATE', payload: variable }, '*');
@@ -165,7 +161,6 @@
           if (slide.OptionalHref) {
             const anchor = document.createElement('a');
             anchor.href = 'https://www.ambassadoribet.com/' + slide.OptionalHref;
-
             anchor.addEventListener("click", (e) => {
               e.preventDefault();
               window.parent.postMessage({
@@ -173,7 +168,6 @@
                 payload: 'https://www.ambassadoribet.com/' + slide.OptionalHref
               }, '*');
             });
-
             anchor.appendChild(innerContent);
             innerContent = anchor;
           }
@@ -182,18 +176,30 @@
             sendNavigateMessage(slide.NavigateVar);
           });
 
+          // Create a picture element for responsive images
+          const picture = document.createElement('picture');
+
+          // Mobile-specific image for screen widths 768px and below using the API-provided imageMobile path.
+          const sourceMobile = document.createElement('source');
+          sourceMobile.media = "(max-width: 768px)";
+          sourceMobile.srcset = 'https://www.ambassadoribet.com/_internal/ts-images/' + encodeURI(slide.imageMobile.path);
+          picture.appendChild(sourceMobile);
+
+          // Default image for larger screens using the desktop image.
           const img = document.createElement('img');
-          img.src = 'https://www.ambassadoribet.com/_internal/ts-images/' + slide.image.path;
+          img.src = 'https://www.ambassadoribet.com/_internal/ts-images/' + encodeURI(slide.image.path);
           img.alt = "Slide Image";
           img.loading = "lazy";
+          picture.appendChild(img);
 
+          innerContent.appendChild(picture);
+
+          // Caption element.
           const caption = document.createElement('div');
-          // Uncomment the next two lines if you want to display captions
-          // caption.className = 'slide-caption';
-          // caption.textContent = slide.caption || "";
+/*           caption.className = 'slide-caption';
+          caption.textContent = slide.caption || "";
+          innerContent.appendChild(caption); */
 
-          innerContent.appendChild(img);
-          innerContent.appendChild(caption);
           slideDiv.appendChild(innerContent);
           slidesContainer.appendChild(slideDiv);
         });
