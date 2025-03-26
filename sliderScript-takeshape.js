@@ -17,8 +17,8 @@
 
     const lang = getQueryParam('lang', 'en');
     const page = getQueryParam('page', 'home');
-    const endpoint = 'https://api.takeshape.io/project/f2b70d9b-56f9-4d2d-be98-874fcbc02a46/production/graphql';
-    const token = '86f2864b8683471ab46e8958c17edaaa';
+    const endpoint = 'https://api.takeshape.io/project/5da2b4d5-59f6-412a-82c3-f6a272b532be/production/graphql';
+    const token = 'dde685a904334d79915c7a9f31860f36';
 
     fetch(endpoint, {
       method: 'POST',
