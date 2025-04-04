@@ -1,3 +1,11 @@
+
+@font-face {
+  font-family: "Noto Sans Ambassadori";
+  font-style: normal;
+  font-display: swap;
+  src: url(https://usernamenotavailable12.github.io/Font-Repository/NotoSansAmbassadori-Regular.ttf);
+}
+
 body {
   margin: 0;
   padding: 0;
