@@ -112,3 +112,28 @@ body {
 .indicator-dot.active {
   background-color: rgba(255, 255, 255, 1);
 }
+
+
+#counter {
+  position: absolute;
+  top: 5%;
+  right: 3%;
+  background: #0000005e;
+  color: white;
+  padding: 11px 16px;
+  border-radius: 5px;
+  z-index: 100;
+  border-radius: 42px;
+  font-family: 'Noto Sans Ambassadori';
+  font-size: 14px;
+  border: 1px solid rgba(255,255,255,.2);
+}
+@media (width < 768px) {
+  #counter {
+    font-size: 10px;
+    padding: 8px 12px;
+    background: #00000091;
+    right: 10px;
+    padding: 7px 10px;
+  }
+}

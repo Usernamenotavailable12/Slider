@@ -169,6 +169,7 @@
           showSlide(currentSlide);
           prevTranslate = -slideWidth * currentSlide;
           startAutoSlide();
+          document.getElementById('counter').innerHTML = `${currentSlide + 1} / ${totalSlides}`;
         }
 
         function sendNavigateMessage(variable) {
@@ -232,6 +233,8 @@
 
         slidesContainer.style.width = (slideWidth * totalSlides) + 'vw';
 
+         document.getElementById('counter').innerHTML = `${currentSlide + 1} / ${totalSlides}`;
+
         // Build slider indicators (dots).
         for (let i = 0; i < totalSlides; i++) {
           const dot = document.createElement('span');
@@ -265,6 +268,7 @@
           showSlide(prev);
           prevTranslate = -slideWidth * prev;
           startAutoSlide();
+          document.getElementById('counter').innerHTML = `${currentSlide + 1} / ${totalSlides}`;
         });
 
         root.querySelector('#nextBtn')?.addEventListener('click', () => {
@@ -272,6 +276,7 @@
           showSlide(next);
           prevTranslate = -slideWidth * next;
           startAutoSlide();
+          document.getElementById('counter').innerHTML = `${currentSlide + 1} / ${totalSlides}`;
         });
 
         showSlide(0);
