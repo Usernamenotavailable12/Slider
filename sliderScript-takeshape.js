@@ -103,6 +103,7 @@
             const next = (currentSlide + 1) % totalSlides;
             showSlide(next);
             prevTranslate = -slideWidth * next;
+            document.getElementById('counter').innerHTML = `${currentSlide + 1} / ${totalSlides}`;
           }, autoSlideIntervalTime);
         }
 
