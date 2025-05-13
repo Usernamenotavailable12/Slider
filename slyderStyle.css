@@ -16,6 +16,7 @@ body {
   position: relative;
   overflow: hidden;
   user-select: none;
+  border-radius: 10px;
 }
 @media (max-width: 600px) {
   .carousel {
