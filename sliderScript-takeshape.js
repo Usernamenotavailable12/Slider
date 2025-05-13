@@ -208,7 +208,7 @@
 
           // Mobile-specific image for screen widths 768px and below.
           const sourceMobile = document.createElement('source');
-          sourceMobile.media = "(max-width: 768px)";
+          sourceMobile.media = "(max-width: 500px)";
           sourceMobile.srcset = 'https://www.ambassadoribet.com/_internal/ts-images/' + fixUrl(slide.imageMobile.path);
           picture.appendChild(sourceMobile);
 
