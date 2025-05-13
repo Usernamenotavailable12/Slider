@@ -17,7 +17,7 @@ body {
   overflow: hidden;
   user-select: none;
 }
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   .carousel {
     width: 100vw;
     border-radius: 10px;
@@ -88,7 +88,7 @@ body {
   text-decoration: none;
   color: inherit;
 }
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   .carousel {
   img {
       object-fit: cover;
@@ -138,7 +138,7 @@ body {
   font-size: 14px;
   border: 1px solid rgba(255,255,255,.2);
 }
-@media (width < 500px) {
+@media (width < 600px) {
   #counter {
     font-size: 10px;
     padding: 8px 12px;
