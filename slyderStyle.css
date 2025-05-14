@@ -22,7 +22,6 @@ body {
   .carousel {
     width: 100vw;
     border-radius: 10px;
-    scale: .95;
   }
   .slide {
     min-width: 50vw;
