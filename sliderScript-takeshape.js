@@ -185,33 +185,19 @@
           let innerContent = document.createElement('div');
           innerContent.className = 'slide-content';
 
-if (slide.OptionalHref) {
-  const anchor = document.createElement('a');
-  anchor.href = slide.OptionalHref;
-  anchor.setAttribute('aria-label', slide.caption || 'Slide link');
-  anchor.draggable = false;
-
-  anchor.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    // First try internal navigation via postMessage if needed
-    if (slide.NavigateVar && window.TMA?.navigate) {
-      sendNavigateMessage(slide.NavigateVar);
-      return;
-    }
-
-    // Otherwise, fallback to soft SPA-style href change
-    if (window.location.href !== slide.OptionalHref) {
-      history.pushState({}, '', slide.OptionalHref);
-      window.dispatchEvent(new Event('popstate'));
-    }
-  });
-
-  anchor.appendChild(innerContent);
-  innerContent = anchor;
-}
-        
+          if (slide.OptionalHref) {
+            const anchor = document.createElement('a');
+            anchor.href = slide.OptionalHref;
+            anchor.addEventListener("click", (e) => {
+              e.preventDefault();
+              window.parent.postMessage({
+                type: 'TMA_HREF',
+                payload: slide.OptionalHref
+              }, '*');
+            });
+            anchor.appendChild(innerContent);
+            innerContent = anchor;
+          }
 
           innerContent.addEventListener("click", () => {
             sendNavigateMessage(slide.NavigateVar);
