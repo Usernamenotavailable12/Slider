@@ -17,7 +17,7 @@
 
     const lang = getQueryParam('lang', 'ka');
     const page = getQueryParam('page', 'sport');
-    const endpoint = 'https://api.takeshape.io/project/5da2b4d5-59f6-412a-82c3-f6a272b532be/production/graphql';
+    const endpoint = 'https://cdn.takeshape.io/project/5da2b4d5-59f6-412a-82c3-f6a272b532be/production/graphql';
     const token = 'dde685a904334d79915c7a9f31860f36';
 
     fetch(endpoint, {
