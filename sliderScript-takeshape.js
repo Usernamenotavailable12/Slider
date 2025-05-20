@@ -29,7 +29,7 @@
       body: JSON.stringify({
         query: `
           query GetSlides($locale: String!) {
-            getSlideList(locale: $locale, size: 30) {
+            getSlideList(locale: $locale) {
               items {
                 caption
                 pages
